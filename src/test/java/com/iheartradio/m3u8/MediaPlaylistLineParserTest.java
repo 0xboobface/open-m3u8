@@ -104,4 +104,37 @@ public class MediaPlaylistLineParserTest extends LineParserStateTestCase {
         assertEquals(subRangeLength, byteRange.getSubRangeLength());
         assertEquals(offset, byteRange.getOffset());
     }
+
+    @Test
+    public void testEXT_X_PROGRAM_DATE_TIME_withPositiveOffset() throws Exception {
+        testProgramDateTime("2021-03-20T17:04:20.694+0245");
+    }
+
+    @Test
+    public void testEXT_X_PROGRAM_DATE_TIME_withNegativeOffset() throws Exception {
+        testProgramDateTime("2021-03-20T17:04:20.694-0300");
+    }
+
+    @Test
+    public void testEXT_X_PROGRAM_DATE_TIME_withPositiveShortOffset() throws Exception {
+        testProgramDateTime("2021-03-20T17:04:20.694+02");
+    }
+
+    @Test
+    public void testEXT_X_PROGRAM_DATE_TIME_withPositiveOffsetAndColon() throws Exception {
+        testProgramDateTime("2021-03-20T17:04:20.694+02:45");
+    }
+
+    @Test
+    public void testEXT_X_PROGRAM_DATE_TIME_withZ() throws Exception {
+        testProgramDateTime("2021-03-20T17:04:20.694Z");
+    }
+
+    private void testProgramDateTime(String dateTime) throws ParseException {
+        final String tag = Constants.EXT_X_PROGRAM_DATE_TIME_TAG;
+        IExtTagParser handler = MediaPlaylistLineParser.EXT_X_PROGRAM_DATE_TIME;
+        String line = "#" + tag + ":" + dateTime;
+        assertEquals(tag, handler.getTag());
+        handler.parse(line, mParseState);
+    }
 }
